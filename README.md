@@ -4,7 +4,7 @@ ASP.NET Core Web API ve Entity Framework Core kullanılarak geliştirilen bir He
 
 Projenin amacı, kullanıcıların teknik destek talepleri oluşturabilmesini ve IT personelinin bu talepleri yönetebilmesini sağlamaktır.
 
-🚀 Kullanılan Teknolojiler
+Kullanılan Teknolojiler
 
 * C#
 * ASP.NET Core Web API (.NET 10)
