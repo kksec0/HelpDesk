@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using HelpDesk.WebAPI.Data;
 using HelpDesk.WebAPI.DTOs;
+using HelpDesk.WebAPI.Models;
 
 
 
@@ -20,7 +21,7 @@ namespace HelpDesk.WebAPI.Controllers
             _context = context;
         }
 
-
+        //Ticket listesini getir
         [HttpGet]
         public async Task<IActionResult> TicketlarıGetir()
         {
@@ -39,5 +40,66 @@ namespace HelpDesk.WebAPI.Controllers
 
             return Ok(ticketDtos);
         }
+
+        //Belirli ticketı getir
+        [HttpGet("{id}")]
+        public async Task<IActionResult> TicketGetir(int id) 
+        {
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+                     
+            }
+
+            var ticketDto = new TicketGetirDto
+            {
+                Id = ticket.Id,
+                Baslik = ticket.Baslik,
+                Aciklama = ticket.Aciklama,
+                Oncelik = ticket.Oncelik,
+                Durum = ticket.Durum,
+                OlusturmaTarihi = ticket.OlusturmaTarihi
+            };
+            return Ok(ticketDto);
+        }
+
+        //Ticket Oluşturma
+        [HttpPost]
+        public async Task<IActionResult> TicketOlustur(TicketOlusturmaDto dto)
+        {
+            var ticket = new Ticket
+            {
+                Baslik = dto.Baslik,
+                Aciklama = dto.Aciklama,
+                Oncelik = dto.Oncelik
+            };
+
+            _context.Tickets.Add(ticket);
+
+            await _context.SaveChangesAsync();
+
+            var ticketDto = new TicketGetirDto
+            {
+                Id = ticket.Id,
+                Baslik = ticket.Baslik,
+                Aciklama = ticket.Aciklama,
+                Oncelik = ticket.Oncelik,
+                Durum = ticket.Durum,
+                OlusturmaTarihi = ticket.OlusturmaTarihi
+            };
+
+            return CreatedAtAction(nameof(TicketGetir), new { id = ticket.Id }, ticketDto);
+
+        
+        
+        
+        
+        
+        }
+
+
+
     }
 }
