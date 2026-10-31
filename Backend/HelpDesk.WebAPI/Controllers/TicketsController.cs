@@ -43,14 +43,14 @@ namespace HelpDesk.WebAPI.Controllers
 
         //Belirli ticketı getir
         [HttpGet("{id}")]
-        public async Task<IActionResult> TicketGetir(int id) 
+        public async Task<IActionResult> TicketGetir(int id)
         {
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
 
             if (ticket == null)
             {
                 return NotFound();
-                     
+
             }
 
             var ticketDto = new TicketGetirDto
@@ -92,12 +92,56 @@ namespace HelpDesk.WebAPI.Controllers
 
             return CreatedAtAction(nameof(TicketGetir), new { id = ticket.Id }, ticketDto);
 
-        
-        
-        
-        
-        
         }
+
+        //Ticket durum Güncelleme
+        [HttpPut("{id}/durum")]
+        public async Task<IActionResult> TicketGuncelle(int id, TicketDurumGuncellemeDto dto)
+        {
+            var ticket = await _context.Tickets
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            ticket.Durum = dto.Durum;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+
+        }
+
+        //Ticket Silme
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> TicketSilme(int id)
+        {
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _context.Tickets.Remove(ticket);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+
+
+
+        }
+
+
+
+
 
 
 
