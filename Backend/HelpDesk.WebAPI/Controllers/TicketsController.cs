@@ -25,10 +25,12 @@ namespace HelpDesk.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> TicketlarıGetir()
         {
-            var tickets = await _context.Tickets.ToListAsync();
+
+            var tickets = await _context.Tickets
+                .Include(ticket => ticket.TicketOlusturan)
+                .ToListAsync();
 
             var ticketDtos = tickets.Select(ticket => new TicketGetirDto
-
             {
                 Id = ticket.Id,
                 Baslik = ticket.Baslik,
@@ -36,6 +38,8 @@ namespace HelpDesk.WebAPI.Controllers
                 Oncelik = ticket.Oncelik,
                 Durum = ticket.Durum,
                 OlusturmaTarihi = ticket.OlusturmaTarihi,
+                TicketOlusturanId = ticket.TicketOlusturanId,
+                TicketOlusturanName = ticket.TicketOlusturan.AdSoyad,
             }).ToList();
 
             return Ok(ticketDtos);
@@ -45,7 +49,7 @@ namespace HelpDesk.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> TicketGetir(int id)
         {
-            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+            var ticket = await _context.Tickets.Include(ticket => ticket.TicketOlusturan).FirstOrDefaultAsync(t => t.Id == id);
 
             if (ticket == null)
             {
@@ -60,7 +64,10 @@ namespace HelpDesk.WebAPI.Controllers
                 Aciklama = ticket.Aciklama,
                 Oncelik = ticket.Oncelik,
                 Durum = ticket.Durum,
-                OlusturmaTarihi = ticket.OlusturmaTarihi
+                OlusturmaTarihi = ticket.OlusturmaTarihi,
+                TicketOlusturanId = ticket.TicketOlusturanId,
+                TicketOlusturanName = ticket.TicketOlusturan.AdSoyad,
+
             };
             return Ok(ticketDto);
         }
@@ -69,11 +76,18 @@ namespace HelpDesk.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> TicketOlustur(TicketOlusturmaDto dto)
         {
+            var kullanıcı = await _context.Users.FirstOrDefaultAsync(user => user.Id == dto.TicketOlusturanId);
+
+            if (kullanıcı == null)
+            {
+                return BadRequest("Kullanıcı bulunamadı.");
+            }
             var ticket = new Ticket
             {
                 Baslik = dto.Baslik,
                 Aciklama = dto.Aciklama,
-                Oncelik = dto.Oncelik
+                Oncelik = dto.Oncelik,
+                TicketOlusturanId = kullanıcı.Id,
             };
 
             _context.Tickets.Add(ticket);
@@ -87,7 +101,9 @@ namespace HelpDesk.WebAPI.Controllers
                 Aciklama = ticket.Aciklama,
                 Oncelik = ticket.Oncelik,
                 Durum = ticket.Durum,
-                OlusturmaTarihi = ticket.OlusturmaTarihi
+                OlusturmaTarihi = ticket.OlusturmaTarihi,
+                TicketOlusturanId = kullanıcı.Id,
+                TicketOlusturanName = kullanıcı.AdSoyad,
             };
 
             return CreatedAtAction(nameof(TicketGetir), new { id = ticket.Id }, ticketDto);

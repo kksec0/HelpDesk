@@ -47,9 +47,51 @@ namespace HelpDesk.WebAPI.Migrations
                     b.Property<int>("Oncelik")
                         .HasColumnType("int");
 
+                    b.Property<int>("TicketOlusturanId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TicketOlusturanId");
+
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("HelpDesk.WebAPI.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdSoyad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("HelpDesk.WebAPI.Models.Ticket", b =>
+                {
+                    b.HasOne("HelpDesk.WebAPI.Models.User", "TicketOlusturan")
+                        .WithMany("OlusturduguTicketlar")
+                        .HasForeignKey("TicketOlusturanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TicketOlusturan");
+                });
+
+            modelBuilder.Entity("HelpDesk.WebAPI.Models.User", b =>
+                {
+                    b.Navigation("OlusturduguTicketlar");
                 });
 #pragma warning restore 612, 618
         }

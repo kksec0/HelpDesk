@@ -13,6 +13,10 @@
         public TicketDurum Durum { get; set; } = TicketDurum.Acik;
 
         public DateTime OlusturmaTarihi { get; set; } = DateTime.UtcNow;
+
+        public int TicketOlusturanId { get; set; }
+
+        public User TicketOlusturan { get; set; } = null!;
     }
 
     public enum TicketOncelik

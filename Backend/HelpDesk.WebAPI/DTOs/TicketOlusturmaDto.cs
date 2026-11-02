@@ -9,5 +9,9 @@ namespace HelpDesk.WebAPI.DTOs
         public string Baslik {  get; set; } = string.Empty;
         public string Aciklama {  get; set; } = string.Empty;
         public TicketOncelik Oncelik { get; set; } = TicketOncelik.Orta;
+
+        public int TicketOlusturanId { get; set; }
+        //public User TicketOlusturan { get; set; } = null!;
+
     }
 }

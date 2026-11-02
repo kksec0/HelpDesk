@@ -11,6 +11,8 @@ namespace HelpDesk.WebAPI.DTOs
         public TicketOncelik Oncelik { get; set; }
         public TicketDurum Durum { get; set; }
         public DateTime OlusturmaTarihi { get; set; }
+        public int TicketOlusturanId { get; set; }
+        public string TicketOlusturanName { get; set; } = null!;
 
 
     }
