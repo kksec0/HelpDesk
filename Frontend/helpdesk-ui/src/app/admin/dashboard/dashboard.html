@@ -1,0 +1,70 @@
+<div class="dashboard">
+
+  <h2>Dashboard</h2>
+  <p>HelpDesk yönetim paneline hoş geldiniz.</p>
+
+  <div class="stats-grid">
+
+    @for (item of istatistikler; track item.baslik) {
+      <p-card>
+        <div class="stat-card">
+
+          <div>
+            <span>{{ item.baslik }}</span>
+            <h2>{{ item.sayi }}</h2>
+          </div>
+
+          <i [class]="item.ikon"></i>
+
+        </div>
+      </p-card>
+    }
+
+  </div>
+
+
+
+  <div class="tickets-section">
+
+  <h3>Son Ticketlar</h3>
+
+  @if (yukleniyor()) {
+    <p>Ticketlar yükleniyor...</p>
+  }
+  @else if (hata()) {
+    <p>{{ hata() }}</p>
+  }
+  @else {
+    <p-table [value]="tickets()" [tableStyle]="{'min-width': '40rem'}">
+
+      <ng-template #header>
+        <tr>
+          <th>Ticket No</th>
+          <th>Başlık</th>
+          <th>Kullanıcı</th>
+          <th>Öncelik</th>
+          <th>Durum</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-ticket>
+        <tr>
+          <td>#{{ ticket.id }}</td>
+          <td>{{ ticket.baslik }}</td>
+          <td>{{ ticket.ticketOlusturanName }}</td>
+          <td>{{ ticket.oncelik }}</td>
+          <td>{{ ticket.durum }}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  }
+
+</div>
+
+</div>
+
+
+
+
+

@@ -41,11 +41,17 @@ namespace HelpDesk.WebAPI.Migrations
                     b.Property<int>("Durum")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("GuncellenmeTarihi")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("OlusturmaTarihi")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Oncelik")
                         .HasColumnType("int");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TicketOlusturanId")
                         .HasColumnType("int");

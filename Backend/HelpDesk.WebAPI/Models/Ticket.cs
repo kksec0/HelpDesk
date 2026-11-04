@@ -14,9 +14,13 @@
 
         public DateTime OlusturmaTarihi { get; set; } = DateTime.UtcNow;
 
+        public DateTime? GuncellenmeTarihi { get; set; } 
+
         public int TicketOlusturanId { get; set; }
 
         public User TicketOlusturan { get; set; } = null!;
+
+        public Boolean SilindiMi {  get; set; } = false;
     }
 
     public enum TicketOncelik

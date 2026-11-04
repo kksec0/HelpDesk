@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using HelpDesk.WebAPI.Data;
 using HelpDesk.WebAPI.DTOs;
 using HelpDesk.WebAPI.Models;
+using System.Net;
 
 
 
@@ -27,6 +28,7 @@ namespace HelpDesk.WebAPI.Controllers
         {
 
             var tickets = await _context.Tickets
+                .Where(ticket =>!ticket.SilindiMi)
                 .Include(ticket => ticket.TicketOlusturan)
                 .ToListAsync();
 
@@ -38,6 +40,7 @@ namespace HelpDesk.WebAPI.Controllers
                 Oncelik = ticket.Oncelik,
                 Durum = ticket.Durum,
                 OlusturmaTarihi = ticket.OlusturmaTarihi,
+                GuncellenmeTarihi = ticket.GuncellenmeTarihi,
                 TicketOlusturanId = ticket.TicketOlusturanId,
                 TicketOlusturanName = ticket.TicketOlusturan.AdSoyad,
             }).ToList();
@@ -49,7 +52,7 @@ namespace HelpDesk.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> TicketGetir(int id)
         {
-            var ticket = await _context.Tickets.Include(ticket => ticket.TicketOlusturan).FirstOrDefaultAsync(t => t.Id == id);
+            var ticket = await _context.Tickets.Include(ticket => ticket.TicketOlusturan).FirstOrDefaultAsync(t => t.Id == id && !t.SilindiMi);
 
             if (ticket == null)
             {
@@ -65,6 +68,7 @@ namespace HelpDesk.WebAPI.Controllers
                 Oncelik = ticket.Oncelik,
                 Durum = ticket.Durum,
                 OlusturmaTarihi = ticket.OlusturmaTarihi,
+                GuncellenmeTarihi = ticket.GuncellenmeTarihi,
                 TicketOlusturanId = ticket.TicketOlusturanId,
                 TicketOlusturanName = ticket.TicketOlusturan.AdSoyad,
 
@@ -112,10 +116,10 @@ namespace HelpDesk.WebAPI.Controllers
 
         //Ticket durum Güncelleme
         [HttpPut("{id}/durum")]
-        public async Task<IActionResult> TicketGuncelle(int id, TicketDurumGuncellemeDto dto)
+        public async Task<IActionResult> TicketDurumGuncelle(int id, TicketDurumGuncellemeDto dto)
         {
             var ticket = await _context.Tickets
-            .FirstOrDefaultAsync(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id && !t.SilindiMi);
 
 
             if (ticket == null)
@@ -124,6 +128,7 @@ namespace HelpDesk.WebAPI.Controllers
             }
 
             ticket.Durum = dto.Durum;
+            ticket.GuncellenmeTarihi = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
@@ -144,11 +149,39 @@ namespace HelpDesk.WebAPI.Controllers
                 return NotFound();
             }
 
-            _context.Tickets.Remove(ticket);
+            ticket.SilindiMi = true; 
 
             await _context.SaveChangesAsync();
 
             return NoContent();
+
+
+
+
+        }
+
+
+        //Ticket Güncelleme
+        [HttpPut("{id}")]
+        public async Task<IActionResult> TicketGuncelle(TicketGuncellemeDto dto,int id) 
+        {
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id && !t.SilindiMi);
+
+            if (ticket == null)
+            {
+                return BadRequest("Ticket Bulunumadı");
+            }
+            
+            ticket.Baslik = dto.Baslik;
+            ticket.Aciklama = dto.Aciklama;
+            ticket.Oncelik = dto.Oncelik;
+            ticket.GuncellenmeTarihi = DateTime.UtcNow;
+
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
 
 
 
