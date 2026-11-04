@@ -1,11 +1,22 @@
-.dashboard h2 {
-  color: #0e3d7e;  
-  margin-bottom: 8px;
+@import "primeicons/primeicons.css";
+
+.dashboard {
+  color: #0d1a2f;
 }
 
-.dashboard p {
-  color: #0e3d7e;
-  margin-bottom: 24px;
+.dashboard-header {
+  margin-bottom: 28px;
+}
+
+.dashboard-header h2 {
+  font-size: 26px;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  color: #64748b;
+  margin: 0;
 }
 
 .stats-grid {
@@ -18,31 +29,64 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
 }
 
 .stat-card span {
   color: #64748b;
   font-size: 14px;
+  
 }
 
 .stat-card h2 {
-  font-size: 28px;
-  margin-top: 12px;
+  font-size: 30px;
+  color: #111822;
+  margin: 12px 0 0;
 }
 
 .stat-card i {
-  font-size: 28px;
-  color: var(--p-primary-color);
+  font-size: 23px;
+  color: black;
 }
 
-@media (max-width: 900px) {
+.tickets-section {
+  margin-top: 32px;
+}
+
+.tickets-section h3 {
+  color: #1e293b;
+  font-size: 19px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 1000px) {
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 600px) {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.empty-message {
+  text-align: center;
+  padding: 40px 20px !important;
+}
+
+.empty-message i {
+  font-size: 2.5rem;
+  color: #94a3b8;
+}
+
+.empty-message h3 {
+  margin: 12px 0 6px;
+  color: #334155;
+}
+
+.empty-message p {
+  color: #64748b;
+  margin: 0;
 }

@@ -1,3 +1,4 @@
+
 <div class="dashboard">
 
   <h2>Dashboard</h2>
@@ -8,63 +9,141 @@
     @for (item of istatistikler; track item.baslik) {
       <p-card>
         <div class="stat-card">
-
           <div>
             <span>{{ item.baslik }}</span>
             <h2>{{ item.sayi }}</h2>
           </div>
 
           <i [class]="item.ikon"></i>
-
         </div>
       </p-card>
     }
 
   </div>
 
-
-
   <div class="tickets-section">
 
-  <h3>Son Ticketlar</h3>
+    <div class="tickets-header">
+      <h3>Son Ticketlar</h3>
 
-  @if (yukleniyor()) {
-    <p>Ticketlar yükleniyor...</p>
-  }
-  @else if (hata()) {
-    <p>{{ hata() }}</p>
-  }
-  @else {
-    <p-table [value]="tickets()" [tableStyle]="{'min-width': '40rem'}">
+      <div class="table-actions">
 
-      <ng-template #header>
-        <tr>
-          <th>Ticket No</th>
-          <th>Başlık</th>
-          <th>Kullanıcı</th>
-          <th>Öncelik</th>
-          <th>Durum</th>
-        </tr>
-      </ng-template>
+        <p-selectbutton
+          [options]="sizes"
+          [(ngModel)]="selectedSize"
+          optionLabel="name"
+          optionValue="value"
+          aria-labelledby="table-size"
+        />
 
-      <ng-template #body let-ticket>
-        <tr>
-          <td>#{{ ticket.id }}</td>
-          <td>{{ ticket.baslik }}</td>
-          <td>{{ ticket.ticketOlusturanName }}</td>
-          <td>{{ ticket.oncelik }}</td>
-          <td>{{ ticket.durum }}</td>
-        </tr>
-      </ng-template>
+      </div>
+    </div>
 
-    </p-table>
-  }
+    @if (yukleniyor()) {
+      <p>Ticketlar yükleniyor...</p>
+    }
+    @else if (hata()) {
+      <p>{{ hata() }}</p>
+    }
+    @else {
+
+      <p-table
+        #dt
+        [value]="tickets()"
+        [size]="selectedSize"
+        [tableStyle]="{'min-width': '40rem'}"
+        [globalFilterFields]="['baslik', 'aciklama', 'ticketOlusturanName']"
+        [paginator]="true"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} - {last} / Toplam {totalRecords} ticket"
+      >
+
+        <ng-template #caption>
+          <input
+            pInputText
+            type="text"
+            placeholder="Ticket ara..."
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          />
+        </ng-template>
+
+        <ng-template #emptymessage>
+            <tr>
+            <td colspan="5" class="empty-message">
+            <div>
+                <i class="pi pi-inbox"></i>
+                <h3>Ticket bulunamadı</h3>
+                <p>Aradığınız kriterlere uygun bir ticket bulunamadı.</p>
+            </div>
+            </td>
+            </tr>
+        </ng-template>
+
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="id">
+              Ticket No
+              <p-sortIcon field="id" />
+            </th>
+
+            <th pSortableColumn="baslik">
+              Başlık
+              <p-sortIcon field="baslik" />
+            </th>
+
+            <th pSortableColumn="ticketOlusturanName">
+              Kullanıcı
+              <p-sortIcon field="ticketOlusturanName" />
+            </th>
+
+            <th pSortableColumn="oncelik">
+              Öncelik
+              <p-sortIcon field="oncelik" />
+            </th>
+
+            <th pSortableColumn="durum">
+              Durum
+              <p-sortIcon field="durum" />
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-ticket>
+          <tr>
+            <td>#{{ ticket.id }}</td>
+            <td>{{ ticket.baslik }}</td>
+            <td>{{ ticket.ticketOlusturanName }}</td>
+
+            <td>
+              <p-tag
+                [value]="oncelikAdi(ticket.oncelik)"
+                [severity]="
+                  ticket.oncelik === 4 ? 'danger' :
+                  ticket.oncelik === 3 ? 'warn' :
+                  ticket.oncelik === 2 ? 'info' : 'secondary'
+                "
+              />
+            </td>
+
+            <td>
+              <p-tag
+                [value]="durumAdi(ticket.durum)"
+                [severity]="
+                  ticket.durum === 1 ? 'danger' :
+                  ticket.durum === 2 ? 'warn' :
+                  ticket.durum === 3 ? 'success' : 'secondary'
+                "
+              />
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+    }
+
+  </div>
 
 </div>
-
-</div>
-
-
-
-
-

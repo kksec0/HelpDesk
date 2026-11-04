@@ -39,9 +39,17 @@
 }
 
 .topbar {
-  background: white;
-  padding: 20px 28px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 0 28px;
   border-bottom: 1px solid #e2e8f0;
+}
+
+.topbar h3 {
+  margin: 0;
+  color: #1e293b;
 }
 
 .content {
