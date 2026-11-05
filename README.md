@@ -8,6 +8,6 @@ Kullanılan Teknolojiler
 
 * ASP.NET Core Web API (.NET 10)
 * Microsoft SQL Server
-* Angular
+* Angular (PrimeNG UI Library)
 * Swagger / OpenAPI
 * Git & GitHub
