@@ -1,0 +1,113 @@
+
+
+<div class="tickets-page">
+
+    <div class="page-header">
+
+    <div>
+      <h2>Ticket Yönetimi</h2>
+      <p>Destek taleplerini görüntüleyin ve yönetin.</p>
+    </div>
+
+    <p-button label="Yeni Ticket" [style]="{ 'border-radius': '1px' }">
+        <ng-template #icon>
+        <i class="pi pi-plus"></i>
+        </ng-template>
+    </p-button>
+
+    </div>
+
+
+    @if (yukleniyor()) {
+    <p>Ticket kayıtları yükleniyor...</p>
+    }
+    @else if (hata()) {
+        <p>{{ hata() }}</p>
+    }
+    @else {
+    
+    <div class="table-search">
+        <input
+        type="text"
+        placeholder="Ticket ara..."
+        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+        />
+    </div>
+    <p-table
+    #dt
+    [value]="tickets()"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['baslik', 'aciklama', 'ticketOlusturanName']"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    >
+    <ng-template #header>
+        <tr>
+        <th pSortableColumn="id">
+        ID <p-sortIcon field="id" />
+        </th>
+
+        <th pSortableColumn="olusturanName">
+        Kullanıcı <p-sortIcon field="olusturanName" />
+        </th>
+
+        <th pSortableColumn="baslik">
+        Başlık <p-sortIcon field="baslik" />
+        </th>
+
+        <th pSortableColumn="aciklama">
+        Açıklama <p-sortIcon field="aciklama" />
+        </th>
+
+        <th pSortableColumn="oncelik">
+        Öncelik <p-sortIcon field="oncelik" />
+        </th>
+
+        <th pSortableColumn="durum">
+        Durum <p-sortIcon field="durum" />
+        </th>
+
+        <th pSortableColumn="olusturmaTarihi">
+        Oluşturulma Tarihi <p-sortIcon field="olusturmaTarihi" />
+        </th>
+         </tr>
+    </ng-template>
+
+    <ng-template #body let-ticket>
+      <tr>
+        <td>{{ ticket.id }}</td>
+        <td>{{ ticket.ticketOlusturanName }}</td>
+        <td>{{ ticket.baslik }}</td>
+        <td>{{ ticket.aciklama }}</td>
+        <td>
+            <p-tag
+                [value]="oncelikEtiketi(ticket.oncelik)"
+                [severity]="ticket.oncelik === 4 ? 'danger' :
+                            ticket.oncelik === 3 ? 'warn' :
+                            ticket.oncelik === 2 ? 'info' : 'success'"
+            />
+            </td>
+
+            <td>
+            <p-tag
+                [value]="durumEtiketi(ticket.durum)"
+                [severity]="ticket.durum === 1 ? 'warn' :
+                            ticket.durum === 2 ? 'info' : 'success'"
+            />
+        </td>
+        <td>{{ ticket.olusturmaTarihi | date:'dd.MM.yyyy HH:mm' }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">Henüz ticket bulunmuyor.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+    }
+    
+
+
+</div>

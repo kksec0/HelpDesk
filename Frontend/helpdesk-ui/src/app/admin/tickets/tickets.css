@@ -1,0 +1,39 @@
+@import "primeicons/primeicons.css";
+
+.tickets-page {
+  padding: 10px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h2 {
+  margin: 0 0 8px;
+}
+
+.page-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.table-search {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.table-search input {
+  width: 280px;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+}
+
+.table-search input:focus {
+  border-color: #3b82f6;
+}
