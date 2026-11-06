@@ -4,6 +4,7 @@ using HelpDesk.WebAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 
 namespace HelpDesk.WebAPI.Controllers
@@ -25,34 +26,50 @@ namespace HelpDesk.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> UsersGetir()
         {
-            var users = await _userManager.Users
-                .Select(user => new UserGetirDto
+
+            var users = await _userManager.Users.ToListAsync();
+
+            var userDtos = new List<UserGetirDto>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var userDto = new UserGetirDto
                 {
                     Id = user.Id,
                     AdSoyad = user.AdSoyad,
-                    Email = user.Email
-                })
-                .ToListAsync();
+                    Email = user.Email,
+                    AktifMi = user.AktifMi,
+                    Role = roles.FirstOrDefault() ?? string.Empty
+                };
 
-            return Ok(users);
+                userDtos.Add(userDto);
+            }
+            return Ok(userDtos);
         }
-
         // ID ile kullanıcı getir
         [HttpGet("{id}")]
         public async Task<IActionResult> UserGetir(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
+            
 
             if (user == null)
             {
                 return NotFound("Kullanıcı bulunamadı.");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             var userDto = new UserGetirDto
             {
                 Id = user.Id,
                 AdSoyad = user.AdSoyad,
-                Email = user.Email
+                Email = user.Email,
+                Role = roles.FirstOrDefault() ?? string.Empty,
+                AktifMi = user.AktifMi
+
             };
 
             return Ok(userDto);
