@@ -1,13 +1,17 @@
-﻿namespace HelpDesk.WebAPI.Models
+﻿
+using Microsoft.AspNetCore.Identity;
+
+namespace HelpDesk.WebAPI.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
         public string AdSoyad { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+
+        public bool IlkGirisMi { get; set; } = true;
+
+        public bool AktifMi { get; set; } = true;
+
         public ICollection<Ticket> OlusturduguTicketlar { get; set; }
             = new List<Ticket>();
-
-
     }
 }

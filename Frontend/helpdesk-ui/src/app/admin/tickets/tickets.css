@@ -37,3 +37,24 @@
 .table-search input:focus {
   border-color: #3b82f6;
 }
+
+.ticket-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.w-full {
+  width: 100%;
+}

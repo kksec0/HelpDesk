@@ -9,7 +9,9 @@
       <p>Destek taleplerini görüntüleyin ve yönetin.</p>
     </div>
 
-    <p-button label="Yeni Ticket" [style]="{ 'border-radius': '1px' }">
+    <p-button label="Yeni Ticket" 
+    [style]="{ 'border-radius': '1px' }"
+    (onClick)="yeniTicketAc()">
         <ng-template #icon>
         <i class="pi pi-plus"></i>
         </ng-template>
@@ -108,6 +110,69 @@
   </p-table>
     }
     
+    <p-dialog
+    header="Yeni Ticket Oluştur"
+        [visible]="dialogVisible()"
+        (visibleChange)="dialogVisible.set($event)"
+        [modal]="true"
+        [style]="{ width: '500px' }"
+        >
+        <div class="ticket-form">
+
+          <div class="form-group">
+            <label for="baslik">Ticket Başlığı</label>
+            <input
+              pInputText
+              id="baslik"
+              [(ngModel)]="yeniTicket.baslik"
+              placeholder="Örn: Yazıcı çalışmıyor"
+              class="w-full"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="aciklama">Açıklama</label>
+            <textarea
+              pTextarea
+              id="aciklama"
+              [(ngModel)]="yeniTicket.aciklama"
+              placeholder="Sorunu detaylı şekilde açıklayın..."
+              rows="4"
+              class="w-full"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="oncelik">Öncelik</label>
+            <p-select
+              inputId="oncelik"
+              [options]="oncelikSecenekleri"
+              [(ngModel)]="yeniTicket.oncelik"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Öncelik seçin"
+              class="w-full"
+              appendTo="body"
+            />
+          </div>
+
+        </div>
+
+        <ng-template #footer>
+          <p-button
+            label="İptal"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="dialogVisible.set(false)"
+          />
+
+          <p-button
+            label="Ticket Oluştur"
+            icon="pi pi-check"
+            (onClick)="ticketOlustur()"
+          />
+        </ng-template>
+    </p-dialog>
 
 
 </div>

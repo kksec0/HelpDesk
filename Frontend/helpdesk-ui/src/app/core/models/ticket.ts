@@ -9,3 +9,9 @@ export interface Ticket {
   ticketOlusturanId: number;
   ticketOlusturanName: string;
 }
+
+export interface TicketOlustur {
+  baslik: string;
+  aciklama: string;
+  oncelik: number;
+}
